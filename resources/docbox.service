@@ -1,0 +1,14 @@
+[Unit]
+Description=DocBox service
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/docbox/app
+Restart=always
+WorkingDirectory=/docbox
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

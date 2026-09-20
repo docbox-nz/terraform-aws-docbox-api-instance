@@ -1,0 +1,19 @@
+# Environment variable files
+*.env
+*.env.*
+
+# Terraform local metadata directories
+.terraform/*
+
+# Terraform state
+*.tfstate
+*.tfstate.*
+
+# Terraform variable files
+*.tfvars
+
+# Terraform backend config files
+*.tfbackend
+
+/private
+/data
