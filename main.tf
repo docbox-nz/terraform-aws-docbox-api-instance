@@ -188,7 +188,7 @@ resource "aws_iam_policy" "s3_access_policy" {
 
 resource "aws_iam_role_policy_attachment" "s3_access_policy_attachment" {
   role       = aws_iam_role.role.name
-  policy_arn = aws_iam_policy.default_s3_access_policy[0].arn
+  policy_arn = aws_iam_policy.s3_access_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "additional" {
@@ -227,6 +227,29 @@ resource "aws_sqs_queue_policy" "s3_sqs_policy" {
             "aws:SourceArn" = "arn:aws:s3:::docbox-*"
           }
         }
+      }
+    ]
+  })
+}
+
+
+# Policy that allows subscribing to S3 notifications from the SQS queue
+resource "aws_iam_policy" "sqs_read" {
+  name        = var.s3_queue_policy_name
+  description = "Allow docbox EC2 to receive S3 notifications from SQS"
+
+  # The policy document allowing EC2 to read messages from the SQS queue
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "SQS:ReceiveMessage",
+          "SQS:DeleteMessage",
+          "SQS:GetQueueAttributes"
+        ]
+        Resource = aws_sqs_queue.s3_queue.arn
       }
     ]
   })

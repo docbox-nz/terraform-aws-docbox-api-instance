@@ -70,6 +70,13 @@ variable "s3_queue_tag_name" {
   description = "value"
 }
 
+
+variable "s3_queue_policy_name" {
+  type        = string
+  default     = "docbox-sqs-notification-policy"
+  description = "value"
+}
+
 variable "env_secret_name" {
   type        = string
   default     = "docbox-env-file"
