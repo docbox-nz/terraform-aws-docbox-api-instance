@@ -87,18 +87,10 @@ variable "full_access_security_groups" {
   default     = []
 }
 
-variable "proxy_host" {
+variable "proxy_url" {
   type        = string
   default     = ""
   description = "Proxy server host to use if proxying egress"
-  nullable    = true
-}
-
-variable "proxy_port" {
-  type        = number
-  default     = 0
-  description = "Proxy server port to use if proxying egress"
-  nullable    = true
 }
 
 variable "ssh_key_name" {

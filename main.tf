@@ -10,16 +10,13 @@ terraform {
 }
 
 locals {
-  proxy_enabled = var.proxy_host != null && var.proxy_host != "" && var.proxy_port != null && var.proxy_port != 0 && var.proxy_port != "0"
-  proxy_url     = local.proxy_enabled ? "http://${var.proxy_host}:${var.proxy_port}" : ""
-
   binary_name = var.architecture == "arm64" ? "docbox-aarch64-linux-gnu" : "docbox-x86_64-linux-gnu"
   binary_url  = "https://github.com/docbox-nz/docbox/releases/latest/download/${local.binary_name}"
 
   docbox_service_config = file("${path.module}/resources/docbox.service")
 
   update_shell_script = templatefile("${path.module}/scripts/update.sh", {
-    proxy_url  = local.proxy_url,
+    proxy_url  = var.proxy_url,
     binary_url = local.binary_url
   })
 
@@ -28,7 +25,7 @@ locals {
   })
 
   setup_shell_script = templatefile("${path.module}/scripts/setup.sh", {
-    proxy_url  = local.proxy_url,
+    proxy_url  = var.proxy_url,
     binary_url = local.binary_url,
 
     docbox_service_config   = base64encode(local.docbox_service_config),
