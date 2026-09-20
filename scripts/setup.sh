@@ -27,7 +27,7 @@ fi
 
 # Configure dnf and system to use proxy if specified
 configure_proxy() {
-    # Skip proxy setup if PROXY_HOST or 1 is empty
+    # Skip proxy setup if PROXY_URL is empty
     if [ -z "$PROXY_URL" ]; then
         echo "PROXY_URL is empty. Skipping proxy configuration."
         return 0
