@@ -49,7 +49,7 @@ variable "security_group_name" {
 variable "s3_access_policy_name" {
   type        = string
   default     = "docbox_s3_access_policy"
-  description = "Name to use for the default_s3_access_policy if enabled"
+  description = "Name to use for the docbox-* s3 policy"
 }
 
 variable "secrets_access_policy_name" {
@@ -58,10 +58,16 @@ variable "secrets_access_policy_name" {
   description = "Name of the secrets manager policy for the .env secret"
 }
 
-variable "default_s3_access_policy" {
-  type        = bool
-  default     = true
-  description = "Whether to use the default docbox-* s3 access policy to access docbox-* prefixed buckets"
+variable "s3_queue_name" {
+  type        = string
+  default     = "docbox-s3-upload-queue"
+  description = "value"
+}
+
+variable "s3_queue_tag_name" {
+  type        = string
+  default     = "docbox-sqs-queue"
+  description = "value"
 }
 
 variable "env_secret_name" {

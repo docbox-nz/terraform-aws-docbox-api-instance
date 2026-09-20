@@ -162,8 +162,7 @@ resource "aws_iam_role_policy_attachment" "secrets_policy_attachment" {
   policy_arn = aws_iam_policy.secrets_policy.arn
 }
 
-resource "aws_iam_policy" "default_s3_access_policy" {
-  count       = var.default_s3_access_policy ? 1 : 0
+resource "aws_iam_policy" "s3_access_policy" {
   name        = var.s3_access_policy_name
   description = "Default docbox S3 access policy for docbox prefixed bucket access by the API server"
 
@@ -187,8 +186,7 @@ resource "aws_iam_policy" "default_s3_access_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "default_s3_access_policy_attachment" {
-  count      = var.default_s3_access_policy ? 1 : 0
+resource "aws_iam_role_policy_attachment" "s3_access_policy_attachment" {
   role       = aws_iam_role.role.name
   policy_arn = aws_iam_policy.default_s3_access_policy[0].arn
 }
@@ -197,4 +195,39 @@ resource "aws_iam_role_policy_attachment" "additional" {
   for_each   = var.additional_policy_arns
   role       = aws_iam_role.role.name
   policy_arn = each.value
+}
+
+# Queue for file upload messages
+resource "aws_sqs_queue" "s3_queue" {
+  name = var.s3_queue_name
+
+  tags = {
+    Name = var.s3_queue_tag_name
+  }
+}
+
+# Policy on the docbox S3 notification SQS queue that permits AWS S3
+# to push new messages onto the queue
+resource "aws_sqs_queue_policy" "s3_sqs_policy" {
+  queue_url = aws_sqs_queue.s3_queue.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "docbox-queue-events"
+        Effect = "Allow"
+        Principal = {
+          Service = "s3.amazonaws.com"
+        }
+        Action   = "SQS:SendMessage"
+        Resource = aws_sqs_queue.s3_queue.arn
+        Condition = {
+          ArnLike = {
+            "aws:SourceArn" = "arn:aws:s3:::docbox-*"
+          }
+        }
+      }
+    ]
+  })
 }

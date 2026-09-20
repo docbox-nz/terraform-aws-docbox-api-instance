@@ -23,3 +23,11 @@ output "api_instance_id" {
 output "private_ip" {
   value = aws_instance.instance.private_ip
 }
+
+output "upload_queue_arn" {
+  value = aws_sqs_queue.s3_queue.arn
+}
+
+output "upload_queue_url" {
+  value = aws_sqs_queue.s3_queue.url
+}
