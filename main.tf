@@ -254,3 +254,8 @@ resource "aws_iam_policy" "sqs_read" {
     ]
   })
 }
+
+resource "aws_iam_role_policy_attachment" "sqs_read_attachment" {
+  role       = aws_iam_role.role.name
+  policy_arn = aws_iam_policy.sqs_read.arn
+}
